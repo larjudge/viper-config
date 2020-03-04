@@ -1,3 +1,4 @@
-#boolConfig: true
-intConfig: 666
-stringConfig: "Hello World!@#$%^&*()_+"
+spec:
+  boolConfig: true
+  intConfig: 666
+  stringConfig: "Hello World!@#$%^&*()_+"
