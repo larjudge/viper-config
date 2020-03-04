@@ -5,6 +5,7 @@ import (
 	"github.com/mitchellh/mapstructure"
 	flag "github.com/spf13/pflag"
 	"github.com/spf13/viper"
+	"io/ioutil"
 )
 
 var (
@@ -80,7 +81,10 @@ func (c Config) GetMap(config interface{}) map[string]interface{} {
 func main() {
 	flag.Parse()
 	config, _ := loadConfig(*configFile, *flag.CommandLine)
-	fmt.Printf("Default CONFIG IS \n\t%+v\n\n", defaultConfig)
+
+	yaml, _ := ioutil.ReadFile(*configFile)
+	fmt.Printf("YAML \n%+v\n\n", string(yaml))
+	fmt.Printf("DEFAULT CONFIG IS \n\t%+v\n\n", defaultConfig)
 	fmt.Printf("\n\nFLAGS are \n\t%+v\n\t%+v\n\t%+v\n", *stringConfig, *intConfig, *boolConfig)
 	fmt.Printf("\n\nCONFIG IS \n\t%+v\n\n", config)
 }
