@@ -13,7 +13,7 @@ var (
 
 	boolConfig   = flag.BoolP("boolConfig", "b", false, "some bool")
 	intConfig    = flag.IntP("intConfig", "i", 0, "some int")
-	stringConfig = flag.StringP("stringConfig", "s", "", "some string")
+	stringConfig = flag.StringP("stringConfig", "s", "DEFAULT", "some string")
 
 	flagConfig = &Config{
 		AppSpec: AppSpec{
@@ -153,7 +153,7 @@ func main() {
 	fmt.Println(string(x))
 
 
-	fmt.Printf("\n\nFlagCnfig IS %+v\n\n", flagConfig)
+	fmt.Printf("\n\nFlagConfig IS %+v\n\n", flagConfig)
 
 	config, _ := loadConfig(*configFile)
 	fmt.Printf("\n\nFLAGS are \n\t%+v\n\t%+v\n\t%+v\n", *stringConfig, *intConfig, *boolConfig)
