@@ -9,6 +9,8 @@ import (
 
 var (
 	configFile = flag.StringP("config", "c", "", "specific config file to use")
+
+	stringConfig = flag.StringP("spec.stringConfig", "s", "", "some string config")
 )
 
 type Config struct {
@@ -76,8 +78,10 @@ func (c Config) GetMap(config interface{}) map[string]interface{} {
 
 func main() {
 	flag.Parse()
+	viper.BindPFlags(flag.CommandLine)
 
 	config, _ := loadConfig(*configFile)
 
 	fmt.Printf("\n\nCONFIG IS %+v\n\n", config)
+	fmt.Printf("\n\nViper Keys are %+v\n\n", viper.AllKeys())
 }
