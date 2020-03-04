@@ -12,6 +12,14 @@ var (
 	boolConfig   = flag.BoolP("spec.boolConfig", "b", false, "some bool")
 	intConfig    = flag.IntP("spec.intConfig", "i", 0, "some int")
 	stringConfig = flag.StringP("spec.stringConfig", "s", "DEFAULT", "some string")
+
+	defaultConfig = &Config{
+		AppSpec: AppSpec{
+			BoolConfig:   *boolConfig,
+			IntConfig:    *intConfig,
+			StringConfig: *stringConfig,
+		},
+	}
 )
 
 type Config struct {
@@ -23,16 +31,6 @@ type AppSpec struct {
 	IntConfig    int    `json:"intConfig" yaml:"intConfig" mapstructure:"intConfig"`
 	StringConfig string `json:"stringConfig" yaml:"stringConfig" mapstructure:"stringConfig"`
 }
-
-var (
-	defaultConfig = &Config{
-		AppSpec: AppSpec{
-			BoolConfig:   *boolConfig,
-			IntConfig:    *intConfig,
-			StringConfig: *stringConfig,
-		},
-	}
-)
 
 func loadConfig(srcFile string, fl flag.FlagSet) (*Config, error) {
 	viper.BindPFlags(&fl)
