@@ -1,11 +1,10 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"github.com/mitchellh/mapstructure"
+	flag "github.com/spf13/pflag"
 	"github.com/spf13/viper"
-	"io/ioutil"
 )
 
 var (
@@ -45,8 +44,6 @@ func loadConfig(srcFile string) (*Config, error) {
 		viper.AddConfigPath("/config")
 		viper.AddConfigPath("/app/config")
 	}
-
-	// makes config discoverable at /config/config.yaml
 
 	var config Config
 
@@ -109,22 +106,22 @@ func loadConfig(srcFile string) (*Config, error) {
 //		return nil, err
 //	}
 //
-//	//flag.IntVarP(&intConfig, "intConfig", "i", defaultConfig.IntConfig, "some int")
-//	//flag.StringVarP(&stringConfig, "stringConfig", "s", defaultConfig.StringConfig, "some string")
-//	//flag.BoolVarP(&boolConfig, "boolConfig", "b", defaultConfig.BoolConfig, "some bool")
-//	//
-//	////flag.Parse()
-//	//
-//	//err = viper.BindPFlags(flag.CommandLine)
-//	//if err != nil {
-//	//	log.Fatal("cannot bind command line flags")
-//	//}
-//	//
-//	//config = Config{
-//	//	BoolConfig:   boolConfig,
-//	//	IntConfig:    intConfig,
-//	//	StringConfig: stringConfig,
-//	//}
+//	flag.IntVarP(&intConfig, "intConfig", "i", defaultConfig.IntConfig, "some int")
+//	flag.StringVarP(&stringConfig, "stringConfig", "s", defaultConfig.StringConfig, "some string")
+//	flag.BoolVarP(&boolConfig, "boolConfig", "b", defaultConfig.BoolConfig, "some bool")
+//
+//	//flag.Parse()
+//
+//	err = viper.BindPFlags(flag.CommandLine)
+//	if err != nil {
+//		log.Fatal("cannot bind command line flags")
+//	}
+//
+//	config = Config{
+//		BoolConfig:   boolConfig,
+//		IntConfig:    intConfig,
+//		StringConfig: stringConfig,
+//	}
 //
 //	return &config, nil
 //}
@@ -140,17 +137,9 @@ func (c Config) GetMap(config interface{}) map[string]interface{} {
 }
 
 func main() {
-
-	//flag.StringVarP(&configFile, "config", "c", "", "specify config path")
-
-	//configFile := flag.String("config", "", "specific config file to use")
 	flag.Parse()
 
-	x, err := ioutil.ReadFile(*configFile)
-	fmt.Println(string(x))
-	fmt.Println(err)
+	config, _ := loadConfig(*configFile)
 
-	config, err := loadConfig(*configFile)
-	fmt.Printf("err is %+v", err)
 	fmt.Printf("\n\nCONFIG IS %+v\n\n", config)
 }
