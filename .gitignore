@@ -1,0 +1,21 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+.idea
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of coverage tool
+*.out
+*.log
+
+# Unwanted folders
+.DS_Store
+
+/psp-tester
+/psp-stub
+/payments

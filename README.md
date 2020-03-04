@@ -1,0 +1,1 @@
+`go run main.go --intConfig=1 --stringConfig="hello world" --boolConfig=true`
