@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	configFile = flag.String("config", "", "specific config file to use")
+	configFile = flag.StringP("config", "c", "", "specific config file to use")
 )
 
 type Config struct {
