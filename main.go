@@ -44,7 +44,9 @@ var (
 	}
 )
 
-func loadConfig(srcFile string) (*Config, error) {
+func loadConfig(srcFile string, fl flag.FlagSet) (*Config, error) {
+	viper.BindPFlags(&fl)
+
 	if srcFile != "" {
 		viper.SetConfigFile(srcFile)
 	} else {
@@ -79,62 +81,14 @@ func loadConfig(srcFile string) (*Config, error) {
 	if err := viper.Unmarshal(&config); err != nil {
 		return nil, err
 	}
+
+
+
+
+	fmt.Printf("\nkeys : %+v", viper.AllKeys())
+
 	return &config, nil
 }
-
-//
-//func loadConfig(srcFile string) (*Config, error) {
-//	if srcFile != "" {
-//		fmt.Printf("\n Source file is %s\n", srcFile)
-//		viper.SetConfigFile(srcFile)
-//	}
-//
-//	// makes config discoverable at /config/config.yaml
-//	viper.SetConfigType("yaml")
-//	viper.SetConfigName("local")
-//	viper.AddConfigPath("/config")
-//	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
-//	viper.AutomaticEnv()
-//
-//	var config Config
-//
-//	// convert from struct to generic map (required for viper to merge correctly) and set the defaults (will be used if not explicitly set via environment or config file)
-//	viper.SetDefault("spec", config.GetMap(defaultConfig))
-//
-//	err := viper.ReadInConfig()
-//	if err != nil {
-//		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
-//			fmt.Println("LAR LAR LAR")
-//			fmt.Printf("\nviper.ConfigFileUsed(): \n %+v \n", viper.ConfigFileUsed())
-//			if err := viper.Unmarshal(&config); err != nil {
-//				fmt.Println(fmt.Errorf("Fatal unmarshal config file: %s \n", err))
-//				return nil, err
-//			}
-//		}
-//	}
-//	if err := viper.Unmarshal(&config); err != nil {
-//		return nil, err
-//	}
-//
-//	flag.IntVarP(&intConfig, "intConfig", "i", defaultConfig.IntConfig, "some int")
-//	flag.StringVarP(&stringConfig, "stringConfig", "s", defaultConfig.StringConfig, "some string")
-//	flag.BoolVarP(&boolConfig, "boolConfig", "b", defaultConfig.BoolConfig, "some bool")
-//
-//	//flag.Parse()
-//
-//	err = viper.BindPFlags(flag.CommandLine)
-//	if err != nil {
-//		log.Fatal("cannot bind command line flags")
-//	}
-//
-//	config = Config{
-//		BoolConfig:   boolConfig,
-//		IntConfig:    intConfig,
-//		StringConfig: stringConfig,
-//	}
-//
-//	return &config, nil
-//}
 
 func (c Config) GetMap(config interface{}) map[string]interface{} {
 
@@ -155,7 +109,7 @@ func main() {
 
 	fmt.Printf("\n\nFlagConfig IS %+v\n\n", flagConfig)
 
-	config, _ := loadConfig(*configFile)
+	config, _ := loadConfig(*configFile, *flag.CommandLine)
 	fmt.Printf("\n\nFLAGS are \n\t%+v\n\t%+v\n\t%+v\n", *stringConfig, *intConfig, *boolConfig)
 	fmt.Printf("\n\nCONFIG IS %+v\n\n", config)
 }
