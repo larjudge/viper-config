@@ -1,0 +1,4 @@
+spec:
+  boolConfig: true
+  intConfig: 666
+  stringConfig: "Hello World!@#$%^&*()_+"
