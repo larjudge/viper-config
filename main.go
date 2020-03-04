@@ -9,12 +9,13 @@ import (
 
 var (
 	configFile = flag.StringP("config", "c", "", "specific config file to use")
-
-	stringConfig = flag.StringP("spec.stringConfig", "s", "", "some string config")
+	boolConfig   = flag.BoolP("spec.boolConfig", "b", false, "some bool")
+	intConfig    = flag.IntP("spec.intConfig", "i", 0, "some int")
+	stringConfig = flag.StringP("spec.stringConfig", "s", "DEFAULT", "some string")
 )
 
 type Config struct {
-	AppSpec AppSpec `json:"spec"           yaml:"spec"          mapstructure:"spec"`
+	AppSpec AppSpec `json:"spec" yaml:"spec" mapstructure:"spec"`
 }
 
 type AppSpec struct {
@@ -26,14 +27,16 @@ type AppSpec struct {
 var (
 	defaultConfig = &Config{
 		AppSpec: AppSpec{
-			BoolConfig:   false,
-			IntConfig:    0,
-			StringConfig: "",
+			BoolConfig:   *boolConfig,
+			IntConfig:    *intConfig,
+			StringConfig: *stringConfig,
 		},
 	}
 )
 
-func loadConfig(srcFile string) (*Config, error) {
+func loadConfig(srcFile string, fl flag.FlagSet) (*Config, error) {
+	viper.BindPFlags(&fl)
+
 	if srcFile != "" {
 		viper.SetConfigFile(srcFile)
 	} else {
@@ -78,10 +81,8 @@ func (c Config) GetMap(config interface{}) map[string]interface{} {
 
 func main() {
 	flag.Parse()
-	viper.BindPFlags(flag.CommandLine)
-
-	config, _ := loadConfig(*configFile)
-
-	fmt.Printf("\n\nCONFIG IS %+v\n\n", config)
-	fmt.Printf("\n\nViper Keys are %+v\n\n", viper.AllKeys())
+	config, _ := loadConfig(*configFile, *flag.CommandLine)
+	fmt.Printf("Default CONFIG IS \n\t%+v\n\n", defaultConfig)
+	fmt.Printf("\n\nFLAGS are \n\t%+v\n\t%+v\n\t%+v\n", *stringConfig, *intConfig, *boolConfig)
+	fmt.Printf("\n\nCONFIG IS \n\t%+v\n\n", config)
 }
