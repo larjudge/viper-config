@@ -8,11 +8,15 @@ import (
 	"io/ioutil"
 )
 
+const (
+	defaultHealthCheckURL = "/healthz"
+)
 var (
 	configFile = flag.StringP("config", "c", "", "specific config file to use")
 	boolConfig   = flag.BoolP("spec.boolConfig", "b", false, "some bool")
 	intConfig    = flag.IntP("spec.intConfig", "i", 0, "some int")
 	stringConfig = flag.StringP("spec.stringConfig", "s", "DEFAULT", "some string")
+	healthCheckURL = flag.StringP("opSpec.healthCheckURL", "e", defaultHealthCheckURL, "some string")
 
 	defaultConfig = &Config{
 		AppSpec: AppSpec{
@@ -20,11 +24,17 @@ var (
 			IntConfig:    *intConfig,
 			StringConfig: *stringConfig,
 		},
+		OpSpec: OpSpec{HealthCheckURL: *healthCheckURL},
 	}
 )
 
+type OpSpec struct{
+	HealthCheckURL string `json:"healthCheckURL" yaml:"healthCheckURL" mapstructure:"healthCheckURL"`
+}
+
 type Config struct {
 	AppSpec AppSpec `json:"spec" yaml:"spec" mapstructure:"spec"`
+	OpSpec  OpSpec  `json:"opSpech" yaml:"opSpec mapstructure:"opSpec"`
 }
 
 type AppSpec struct {
@@ -48,7 +58,8 @@ func loadConfig(srcFile string, fl flag.FlagSet) (*Config, error) {
 	var config Config
 
 	// convert from struct to generic map (required for viper to merge correctly) and set the defaults (will be used if not explicitly set via environment or config file)
-	viper.SetDefault("spec", config.GetMap(defaultConfig.AppSpec))
+	viper.SetDefault("spec",  config.GetMap(defaultConfig.AppSpec))
+	viper.SetDefault("opSpec",  config.GetMap(defaultConfig.OpSpec))
 
 	err := viper.ReadInConfig()
 	if err != nil {
@@ -85,6 +96,6 @@ func main() {
 	yaml, _ := ioutil.ReadFile(*configFile)
 	fmt.Printf("YAML \n%+v\n\n", string(yaml))
 	fmt.Printf("DEFAULT CONFIG IS \n\t%+v\n\n", defaultConfig)
-	fmt.Printf("\n\nFLAGS are \n\t%+v\n\t%+v\n\t%+v\n", *stringConfig, *intConfig, *boolConfig)
+	fmt.Printf("\n\nFLAGS are \n\t%+v\n\t%+v\n\t%+v\n\t%+v\n", *stringConfig, *intConfig, *boolConfig, *healthCheckURL)
 	fmt.Printf("\n\nCONFIG IS \n\t%+v\n\n", config)
 }

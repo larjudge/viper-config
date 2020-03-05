@@ -1,4 +1,6 @@
 spec:
   boolConfig: true
-#  intConfig: 666
+  #  intConfig: 666
   stringConfig: "Hello World!@#$%^&*()_+"
+opSpec:
+  healthCheckURL: "/healthz"
